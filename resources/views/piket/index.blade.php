@@ -83,7 +83,7 @@
                         </div>
                         <div class="flex-grow-1 ms-3">
                             <h6 class="mb-0 text-muted">Guru Piket</h6>
-                            <h3 class="mb-0">{{ $piket->pluck('guru_id')->unique()->count() }}</h3>
+                            <h3 class="mb-0">{{ $piket->pluck('id_guru')->unique()->count() }}</h3>
                         </div>
                     </div>
                 </div>

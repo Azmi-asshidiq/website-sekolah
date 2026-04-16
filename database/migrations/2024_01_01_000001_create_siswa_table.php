@@ -14,6 +14,8 @@ return new class extends Migration
             $table->string('nis', 20)->unique();
             $table->string('nama', 100);
             $table->string('kelas', 20);
+            $table->string('jenis_kelamin', 20)->nullable();
+            $table->string('jurusan')->nullable();
             $table->timestamps();
         });
     }

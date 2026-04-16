@@ -9,9 +9,9 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('piket', function (Blueprint $table) {
+      Schema::create('piket', function (Blueprint $table) {
             $table->id('id_piket');
-            $table->foreignId('id_guru')->constrained('guru', 'id_guru')->onDelete('cascade');
+            $table->foreignId('id_guru')->constrained('guru', 'id_guru')->cascadeOnDelete();
             $table->date('tanggal');
             $table->timestamps();
         });

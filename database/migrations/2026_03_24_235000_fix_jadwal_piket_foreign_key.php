@@ -9,17 +9,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('jadwal_piket', function (Blueprint $table) {
-            // Drop existing foreign key constraint
-            $table->dropForeign(['id_guru']);
-            
-            // Drop the column
-            $table->dropColumn('id_guru');
+            $table->dropForeign(['guru_id']);
+            $table->dropColumn('guru_id');
         });
-        
+
         Schema::table('jadwal_piket', function (Blueprint $table) {
-            // Add the column with correct foreign key reference
             $table->unsignedBigInteger('id_guru');
-            
             $table->foreign('id_guru')
                   ->references('id_guru')
                   ->on('guru')
@@ -33,9 +28,9 @@ return new class extends Migration
             $table->dropForeign(['id_guru']);
             $table->dropColumn('id_guru');
         });
-        
+
         Schema::table('jadwal_piket', function (Blueprint $table) {
-            $table->foreignId('id_guru')->constrained('guru')->onDelete('cascade');
+            $table->foreignId('id_guru')->constrained('guru', 'id_guru')->onDelete('cascade');
         });
     }
 };

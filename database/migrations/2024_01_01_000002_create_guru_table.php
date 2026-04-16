@@ -9,10 +9,12 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('guru', function (Blueprint $table) {
+      Schema::create('guru', function (Blueprint $table) {
             $table->id('id_guru');
+            $table->string('nip')->unique();
             $table->string('nama', 100);
             $table->string('jabatan', 50);
+            $table->string('jenis_kelamin', 20)->nullable();
             $table->timestamps();
         });
     }

@@ -13,13 +13,18 @@ return new class extends Migration
     {
         Schema::create('jadwal_piket', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('id_guru')->constrained('guru')->onDelete('cascade');
-            $table->string('hari', 20); // Senin, Selasa, etc.
+
+            $table->foreignId('id_guru')
+                  ->constrained('guru', 'id_guru')
+                  ->onDelete('cascade');
+
+            $table->string('hari', 20);
             $table->time('jam_mulai');
             $table->time('jam_selesai');
-            $table->string('semester', 20); // Ganjil/Genap
+            $table->string('semester', 20);
             $table->year('tahun_ajaran');
             $table->boolean('is_active')->default(true);
+
             $table->timestamps();
         });
     }
