@@ -8,7 +8,7 @@
             <i class="fas fa-chalkboard-teacher me-2" style="color: var(--primary-color);"></i>
             Data Guru
         </h2>
-        @if(auth()->user()->role === 'admin')
+        @if(auth()->user()->role === 'admin' || auth()->user()->role === 'guru')
             <a href="{{ route('guru.create') }}" class="btn btn-primary">
                 <i class="fas fa-plus me-1"></i>
                 Tambah Guru
@@ -178,16 +178,22 @@
                                 </td>
                                 <td class="align-middle">
                                     <div class="btn-group" role="group">
-                                        <a href="{{ route('guru.show', $g->id) }}" class="btn btn-sm btn-outline-primary">
+                                        <a href="{{ route('guru.show', $g->id_guru) }}" class="btn btn-sm btn-outline-primary">
                                             <i class="fas fa-eye"></i>
                                         </a>
-                                        @if(auth()->user()->role === 'admin')
-                                            <a href="{{ route('guru.edit', $g->id) }}" class="btn btn-sm btn-outline-warning">
+                                        @if(auth()->user()->role === 'admin' || auth()->user()->role === 'guru')
+                                            <a href="{{ route('guru.edit', $g->id_guru) }}" class="btn btn-sm btn-outline-warning">
                                                 <i class="fas fa-edit"></i>
                                             </a>
-                                            <button type="button" class="btn btn-sm btn-outline-danger" onclick="confirmDelete({{ $g->id }})">
-                                                <i class="fas fa-trash"></i>
-                                            </button>
+                                        @endif
+                                        @if(auth()->user()->role === 'admin')
+                                            <form action="{{ route('guru.destroy', $g->id_guru) }}" method="POST" class="d-inline">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Hapus data guru ini?')">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </form>
                                         @endif
                                     </div>
                                 </td>
@@ -210,5 +216,4 @@
             </div>
         </div>
     </div>
-@endsection
-@endsection
+@endsection('layouts.app')

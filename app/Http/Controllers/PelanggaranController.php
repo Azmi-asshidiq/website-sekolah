@@ -38,7 +38,7 @@ class PelanggaranController extends Controller
 
         Pelanggaran::create([
             'id_siswa' => $request->id_siswa,
-            'id_guru' => auth()->user()->role === 'admin' ? auth()->id() : null,
+            'id_guru' => null, // Will be set by the system or can be updated later
             'tanggal' => $request->tanggal,
             'jenis_pelanggaran' => $request->jenis_pelanggaran,
             'keterangan' => $request->keterangan,
@@ -76,7 +76,7 @@ class PelanggaranController extends Controller
 
         $pelanggaran->update([
             'id_siswa' => $request->id_siswa,
-            'id_guru' => auth()->user()->role === 'admin' ? auth()->id() : $pelanggaran->id_guru,
+            'id_guru' => $pelanggaran->id_guru, // Keep existing guru assignment
             'tanggal' => $request->tanggal,
             'jenis_pelanggaran' => $request->jenis_pelanggaran,
             'keterangan' => $request->keterangan,

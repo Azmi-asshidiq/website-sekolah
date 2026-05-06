@@ -36,8 +36,8 @@
         <h2>
             <i class="fas fa-exclamation-triangle me-2"></i>Data Pelanggaran
         </h2>
-        @if(auth()->user()->role === 'admin')
-        <a href="{{ route('pelanggaran.index') }}" class="btn btn-secondary" style="background: linear-gradient(135deg, #6366f1, #8b5cf6); border: none; color: white;">
+        @if(auth()->user()->role === 'admin' || auth()->user()->role === 'guru')
+        <a href="{{ route('pelanggaran.create') }}" class="btn btn-primary" style="background: linear-gradient(135deg, #6366f1, #8b5cf6); border: none; color: white;">
             <i class="fas fa-plus me-2"></i>Tambah Pelanggaran
         </a>
         @endif
@@ -78,10 +78,12 @@
                                     <a href="{{ route('pelanggaran.show', $item) }}" class="btn btn-info">
                                         <i class="fas fa-eye"></i>
                                     </a>
-                                    @if(auth()->user()->role === 'admin')
+                                    @if(auth()->user()->role === 'admin' || auth()->user()->role === 'guru')
                                     <a href="{{ route('pelanggaran.edit', $item) }}" class="btn btn-warning">
                                         <i class="fas fa-edit"></i>
                                     </a>
+                                    @endif
+                                    @if(auth()->user()->role === 'admin')
                                     <form action="{{ route('pelanggaran.destroy', $item) }}" method="POST" class="d-inline">
                                         @csrf
                                         @method('DELETE')

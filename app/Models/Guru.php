@@ -21,6 +21,16 @@ class Guru extends Model
         'jenis_kelamin'
     ];
 
+    public function getRouteKeyName()
+    {
+        return 'id_guru';
+    }
+
+    public function resolveRouteBinding($value, $field = null)
+    {
+        return $this->where('id_guru', $value)->firstOrFail();
+    }
+
     public function piket(): HasMany
     {
         return $this->hasMany(Piket::class, 'id_guru');

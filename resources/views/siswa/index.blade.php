@@ -173,14 +173,14 @@
                                 </td>
                                 <td class="align-middle">
                                     <div class="btn-group" role="group">
-                                        <a href="{{ route('siswa.show', $s->id) }}" class="btn btn-sm btn-outline-primary">
+                                        <a href="{{ route('siswa.show', $s->id_siswa) }}" class="btn btn-sm btn-outline-primary">
                                             <i class="fas fa-eye"></i>
                                         </a>
                                         @if(auth()->user()->role === 'admin')
-                                            <a href="{{ route('siswa.edit', $s->id) }}" class="btn btn-sm btn-outline-warning">
+                                            <a href="{{ route('siswa.edit', $s->id_siswa) }}" class="btn btn-sm btn-outline-warning">
                                                 <i class="fas fa-edit"></i>
                                             </a>
-                                            <button type="button" class="btn btn-sm btn-outline-danger" onclick="confirmDelete({{ $s->id }})">
+                                            <button type="button" class="btn btn-sm btn-outline-danger" onclick="confirmDelete({{ $s->id_siswa }})">
                                                 <i class="fas fa-trash"></i>
                                             </button>
                                         @endif

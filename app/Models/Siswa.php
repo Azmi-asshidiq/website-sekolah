@@ -28,6 +28,16 @@ class Siswa extends Model
         'qr_code_data' => 'array',
     ];
 
+    public function getRouteKeyName()
+    {
+        return 'id_siswa';
+    }
+
+    public function resolveRouteBinding($value, $field = null)
+    {
+        return $this->where('id_siswa', $value)->firstOrFail();
+    }
+
     public function izinKeluar(): HasMany
     {
         return $this->hasMany(IzinKeluar::class, 'id_siswa');

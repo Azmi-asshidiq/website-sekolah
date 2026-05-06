@@ -16,21 +16,23 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             UserSeeder::class,
-            GuruSeeder::class,
         ]);
 
         // Seed Guru
         $guru = Guru::create([
+            'nip' => '197501011998031001',
             'nama' => 'Dr. Ahmad Syarif, M.Pd',
             'jabatan' => 'Kepala Sekolah'
         ]);
         
         Guru::create([
+            'nip' => '197802022000031002',
             'nama' => 'Ibu Siti Aminah, S.Pd',
             'jabatan' => 'Wakil Kepala Sekolah'
         ]);
         
         Guru::create([
+            'nip' => '198003032002031003',
             'nama' => 'Bapak Budi Santoso, S.Kom',
             'jabatan' => 'Guru Informatika'
         ]);

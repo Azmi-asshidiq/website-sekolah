@@ -9,8 +9,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('jadwal_piket', function (Blueprint $table) {
-            $table->dropForeign(['guru_id']);
-            $table->dropColumn('guru_id');
+            $table->dropForeign(['id_guru']);
+            $table->dropColumn('id_guru');
         });
 
         Schema::table('jadwal_piket', function (Blueprint $table) {

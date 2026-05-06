@@ -5,12 +5,13 @@ namespace App\Http\Controllers;
 
 use App\Models\Siswa;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class SiswaController extends Controller
 {
     public function index()
     {
-        $siswa = Siswa::latest()->paginate(10);
+        $siswa = Siswa::latest()->paginate(50); // Tambah limit agar semua data muncul
         return view('siswa.index', compact('siswa'));
     }
 

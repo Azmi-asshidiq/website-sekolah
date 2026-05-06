@@ -27,11 +27,22 @@ class GuruController extends Controller
     public function store(Request $request)
     {
         $request->validate([
+            'nip' => 'required|unique:guru,nip|max:20',
             'nama' => 'required|max:100',
-            'jabatan' => 'required|max:50'
+            'jabatan' => 'required|max:50',
+            'jenis_kelamin' => 'nullable|in:Laki-laki,Perempuan',
+            'email' => 'nullable|email|max:100|unique:guru,email',
+            'telepon' => 'nullable|string|max:15'
         ]);
 
-        Guru::create($request->all());
+        Guru::create([
+            'nip' => $request->nip,
+            'nama' => $request->nama,
+            'jabatan' => $request->jabatan,
+            'jenis_kelamin' => $request->jenis_kelamin,
+            'email' => $request->email,
+            'telepon' => $request->telepon,
+        ]);
 
         return redirect()->route('guru.index')
             ->with('success', 'Data guru berhasil ditambahkan.');
@@ -52,12 +63,24 @@ class GuruController extends Controller
         if (auth()->user()->role !== 'admin' && auth()->user()->role !== 'guru') {
             abort(403, 'Unauthorized access');
         }
+        
         $request->validate([
+            'nip' => 'required|unique:guru,nip,' . $guru->id_guru . ',id_guru|max:20',
             'nama' => 'required|max:100',
-            'jabatan' => 'required|max:50'
+            'jabatan' => 'required|max:50',
+            'jenis_kelamin' => 'nullable|in:Laki-laki,Perempuan',
+            'email' => 'nullable|email|max:100|unique:guru,email,' . $guru->id_guru . ',id_guru',
+            'telepon' => 'nullable|string|max:15'
         ]);
 
-        $guru->update($request->all());
+        $guru->update([
+            'nip' => $request->nip,
+            'nama' => $request->nama,
+            'jabatan' => $request->jabatan,
+            'jenis_kelamin' => $request->jenis_kelamin,
+            'email' => $request->email,
+            'telepon' => $request->telepon,
+        ]);
 
         return redirect()->route('guru.index')
             ->with('success', 'Data guru berhasil diperbarui.');
