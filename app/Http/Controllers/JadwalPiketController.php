@@ -26,12 +26,19 @@ class JadwalPiketController extends Controller
 
     public function create(): View
     {
+        if (auth()->user()->role !== 'admin' && auth()->user()->role !== 'kepsek') {
+            abort(403, 'Unauthorized access');
+        }
         $guru = Guru::all();
         return view('jadwal-piket.create', compact('guru'));
     }
 
     public function store(Request $request): RedirectResponse
     {
+        if (auth()->user()->role !== 'admin' && auth()->user()->role !== 'kepsek') {
+            abort(403, 'Unauthorized access');
+        }
+        
         $request->validate([
             'id_guru' => 'required|exists:guru,id_guru',
             'hari' => 'required|string|in:Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday',
@@ -52,7 +59,7 @@ class JadwalPiketController extends Controller
         ]);
 
         return redirect()->route('jadwal-piket.index')
-            ->with('success', 'Jadwal piket berhasil ditambahkan');
+            ->with('success', 'Jadwal piket berhasil ditambahkan.');
     }
 
     public function show(JadwalPiket $jadwalPiket): View
@@ -63,6 +70,9 @@ class JadwalPiketController extends Controller
 
     public function edit(JadwalPiket $jadwalPiket): View
     {
+        if (auth()->user()->role !== 'admin' && auth()->user()->role !== 'kepsek') {
+            abort(403, 'Unauthorized access');
+        }
         $jadwalPiket->load('guru');
         $guru = Guru::all();
         return view('jadwal-piket.edit', compact('jadwalPiket', 'guru'));
@@ -70,6 +80,10 @@ class JadwalPiketController extends Controller
 
     public function update(Request $request, JadwalPiket $jadwalPiket): RedirectResponse
     {
+        if (auth()->user()->role !== 'admin' && auth()->user()->role !== 'kepsek') {
+            abort(403, 'Unauthorized access');
+        }
+        
         $request->validate([
             'id_guru' => 'required|exists:guru,id_guru',
             'hari' => 'required|string|in:Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday',
@@ -90,14 +104,18 @@ class JadwalPiketController extends Controller
         ]);
 
         return redirect()->route('jadwal-piket.index')
-            ->with('success', 'Jadwal piket berhasil diperbarui');
+            ->with('success', 'Jadwal piket berhasil diperbarui.');
     }
 
     public function destroy(JadwalPiket $jadwalPiket): RedirectResponse
     {
+        if (auth()->user()->role !== 'admin' && auth()->user()->role !== 'kepsek') {
+            abort(403, 'Unauthorized access');
+        }
+        
         $jadwalPiket->delete();
         return redirect()->route('jadwal-piket.index')
-            ->with('success', 'Jadwal piket berhasil dihapus');
+            ->with('success', 'Jadwal piket berhasil dihapus.');
     }
 
     public function getJadwalHariIni(): View

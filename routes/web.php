@@ -334,6 +334,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     
+    // Kepsek Dashboard
+    Route::get('/kepsek-dashboard', [DashboardController::class, 'kepsekDashboard'])->name('kepsek.dashboard')->middleware('role:kepsek');
+    
     // Test dashboard data
     Route::get('/test-dashboard', function() {
         try {
@@ -391,22 +394,22 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::delete('keterlambatan/{keterlambatan}', [KeterlambatanController::class, 'destroy'])->middleware('role:guru')->name('keterlambatan.destroy');
 
     // ================= PELANGGARAN =================
-    Route::get('pelanggaran/create', [PelanggaranController::class, 'create'])->middleware('role:admin,guru')->name('pelanggaran.create');
-    Route::post('pelanggaran', [PelanggaranController::class, 'store'])->middleware('role:admin,guru')->name('pelanggaran.store');
-    Route::get('pelanggaran/rekap', [PelanggaranController::class, 'rekap'])->middleware('role:admin,guru')->name('pelanggaran.rekap');
-    Route::resource('pelanggaran', PelanggaranController::class)->except(['create', 'store', 'edit', 'update', 'destroy'])->middleware('role:admin,guru');
-    Route::get('pelanggaran/{pelanggaran}/edit', [PelanggaranController::class, 'edit'])->middleware('role:admin,guru')->name('pelanggaran.edit');
-    Route::put('pelanggaran/{pelanggaran}', [PelanggaranController::class, 'update'])->middleware('role:admin,guru')->name('pelanggaran.update');
-    Route::delete('pelanggaran/{pelanggaran}', [PelanggaranController::class, 'destroy'])->middleware('role:admin,guru')->name('pelanggaran.destroy');
+    Route::get('pelanggaran/create', [PelanggaranController::class, 'create'])->middleware('role:admin,guru,kepsek')->name('pelanggaran.create');
+    Route::post('pelanggaran', [PelanggaranController::class, 'store'])->middleware('role:admin,guru,kepsek')->name('pelanggaran.store');
+    Route::get('pelanggaran/rekap', [PelanggaranController::class, 'rekap'])->middleware('role:admin,guru,kepsek')->name('pelanggaran.rekap');
+    Route::resource('pelanggaran', PelanggaranController::class)->except(['create', 'store', 'edit', 'update', 'destroy'])->middleware('role:admin,guru,kepsek');
+    Route::get('pelanggaran/{pelanggaran}/edit', [PelanggaranController::class, 'edit'])->middleware('role:admin,guru,kepsek')->name('pelanggaran.edit');
+    Route::put('pelanggaran/{pelanggaran}', [PelanggaranController::class, 'update'])->middleware('role:admin,guru,kepsek')->name('pelanggaran.update');
+    Route::delete('pelanggaran/{pelanggaran}', [PelanggaranController::class, 'destroy'])->middleware('role:admin,guru,kepsek')->name('pelanggaran.destroy');
 
     // ================= JADWAL PIKET =================
-    Route::get('jadwal-piket/create', [JadwalPiketController::class, 'create'])->middleware('role:admin,guru')->name('jadwal-piket.create');
-    Route::post('jadwal-piket', [JadwalPiketController::class, 'store'])->middleware('role:admin,guru')->name('jadwal-piket.store');
+    Route::get('jadwal-piket/create', [JadwalPiketController::class, 'create'])->middleware('role:admin,guru,kepsek')->name('jadwal-piket.create');
+    Route::post('jadwal-piket', [JadwalPiketController::class, 'store'])->middleware('role:admin,guru,kepsek')->name('jadwal-piket.store');
     Route::get('jadwal-piket/hari-ini', [JadwalPiketController::class, 'getJadwalHariIni'])->name('jadwal-piket.hari-ini');
     Route::resource('jadwal-piket', JadwalPiketController::class)->except(['create', 'store', 'edit', 'update', 'destroy']);
-    Route::get('jadwal-piket/{jadwalPiket}/edit', [JadwalPiketController::class, 'edit'])->middleware('role:admin,guru')->name('jadwal-piket.edit');
-    Route::put('jadwal-piket/{jadwalPiket}', [JadwalPiketController::class, 'update'])->middleware('role:admin,guru')->name('jadwal-piket.update');
-    Route::delete('jadwal-piket/{jadwalPiket}', [JadwalPiketController::class, 'destroy'])->middleware('role:admin,guru')->name('jadwal-piket.destroy');
+    Route::get('jadwal-piket/{jadwalPiket}/edit', [JadwalPiketController::class, 'edit'])->middleware('role:admin,guru,kepsek')->name('jadwal-piket.edit');
+    Route::put('jadwal-piket/{jadwalPiket}', [JadwalPiketController::class, 'update'])->middleware('role:admin,guru,kepsek')->name('jadwal-piket.update');
+    Route::delete('jadwal-piket/{jadwalPiket}', [JadwalPiketController::class, 'destroy'])->middleware('role:admin,guru,kepsek')->name('jadwal-piket.destroy');
 
     // ================= QR =================
     Route::post('/api/qr-scan', [QRScannerController::class, 'scan'])->middleware('role:admin,guru')->name('qr.scan');

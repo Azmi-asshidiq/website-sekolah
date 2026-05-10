@@ -19,7 +19,7 @@ class UserSeeder extends Seeder
             ['email' => 'admin@eduspace.com'],
             [
                 'name' => 'Administrator',
-                'password' => Hash::make('password123'),
+                'password' => Hash::make('password'),
                 'email_verified_at' => now(),
                 'role' => 'admin',
             ]
@@ -29,7 +29,7 @@ class UserSeeder extends Seeder
             ['email' => 'kepsek@eduspace.com'],
             [
                 'name' => 'Kepala Sekolah',
-                'password' => Hash::make('password123'),
+                'password' => Hash::make('password'),
                 'email_verified_at' => now(),
                 'role' => 'kepsek',
             ]
@@ -39,7 +39,7 @@ class UserSeeder extends Seeder
             ['email' => 'guru@eduspace.com'],
             [
                 'name' => 'Guru Piket',
-                'password' => Hash::make('password123'),
+                'password' => Hash::make('password'),
                 'email_verified_at' => now(),
                 'role' => 'guru',
             ]

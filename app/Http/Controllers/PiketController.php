@@ -12,7 +12,11 @@ class PiketController extends Controller
     public function index()
     {
         $piket = Piket::with('guru')->latest()->paginate(10);
-        return view('jadwal-piket.index', compact('piket'));
+        
+        // Group by guru for better display
+        $jadwalPiket = $piket->groupBy('id_guru');
+        
+        return view('jadwal-piket.index', compact('piket', 'jadwalPiket'));
     }
 
     public function create()

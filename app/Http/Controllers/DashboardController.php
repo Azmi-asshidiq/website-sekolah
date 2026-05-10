@@ -80,6 +80,166 @@ class DashboardController extends Controller
     }
     
     /**
+     * Display kepsek-specific dashboard.
+     */
+    public function kepsekDashboard()
+    {
+        $user = auth()->user();
+        $userRole = $user->role;
+        
+        // Get base counts
+        $totalSiswa = Siswa::count();
+        $totalGuru = Guru::count();
+        $totalPiket = Piket::count();
+        $totalKeterlambatan = Keterlambatan::count();
+        $totalPelanggaran = Pelanggaran::count();
+        $totalIzin = IzinKeluar::count();
+        
+        // Get today's activity data
+        $todayIzin = IzinKeluar::whereDate('waktu_keluar', now()->format('Y-m-d'))->count();
+        $todayLate = Keterlambatan::whereDate('waktu_datang', now()->format('Y-m-d'))->count();
+        $todayPiket = Piket::where('hari', now()->format('l'))->count();
+        
+        // Summary reports for kepsek
+        $monthlySummary = $this->getMonthlySummary();
+        $teacherPerformance = $this->getTeacherPerformance();
+        $disciplineOverview = $this->getDisciplineOverview();
+        
+        return view('kepsek-dashboard', compact(
+            'totalSiswa', 
+            'totalGuru', 
+            'totalPiket', 
+            'totalKeterlambatan', 
+            'totalPelanggaran',
+            'totalIzin',
+            'userRole',
+            'todayIzin',
+            'todayLate',
+            'todayPiket',
+            'monthlySummary',
+            'teacherPerformance',
+            'disciplineOverview'
+        ));
+    }
+    
+    /**
+     * Get monthly summary for kepsek dashboard
+     */
+    private function getMonthlySummary()
+    {
+        $data = [];
+        
+        for ($i = 5; $i >= 0; $i--) {
+            $month = now()->subMonths($i)->format('Y-m');
+            $izinCount = IzinKeluar::whereMonth('waktu_keluar', $month)->count();
+            $pelanggaranCount = Pelanggaran::whereMonth('created_at', $month)->count();
+            $keterlambatanCount = Keterlambatan::whereMonth('waktu_datang', $month)->count();
+            
+            $data[] = [
+                'month' => now()->subMonths($i)->format('M Y'),
+                'izin' => $izinCount,
+                'pelanggaran' => $pelanggaranCount,
+                'keterlambatan' => $keterlambatanCount
+            ];
+        }
+        
+        return $data;
+    }
+    
+    /**
+     * Get teacher performance data for kepsek dashboard
+     */
+    private function getTeacherPerformance()
+    {
+        $teachers = Guru::withCount(['izinKeluar', 'keterlambatan', 'pelanggaran'])->get();
+        
+        $performance = [];
+        foreach ($teachers as $teacher) {
+            $performance[] = [
+                'name' => $teacher->nama,
+                'nip' => $teacher->nip,
+                'jabatan' => $teacher->jabatan,
+                'total_izin' => $teacher->izin_keluar_count,
+                'total_keterlambatan' => $teacher->keterlambatan_count,
+                'total_pelanggaran' => $teacher->pelanggaran_count,
+                'performance_score' => $this->calculatePerformanceScore($teacher)
+            ];
+        }
+        
+        return $performance;
+    }
+    
+    /**
+     * Get discipline overview for kepsek dashboard
+     */
+    private function getDisciplineOverview()
+    {
+        $totalSiswa = Siswa::count();
+        $totalPelanggaran = Pelanggaran::count();
+        $totalKeterlambatan = Keterlambatan::count();
+        $totalIzin = IzinKeluar::count();
+        
+        $disciplineRate = $totalSiswa > 0 ? (($totalPelanggaran + $totalKeterlambatan) / $totalSiswa) * 100 : 0;
+        
+        return [
+            'total_siswa' => $totalSiswa,
+            'total_pelanggaran' => $totalPelanggaran,
+            'total_keterlambatan' => $totalKeterlambatan,
+            'total_izin' => $totalIzin,
+            'discipline_rate' => round($disciplineRate, 1),
+            'compliance_rate' => round(100 - $disciplineRate, 1)
+        ];
+    }
+    
+    /**
+     * Calculate performance score for teacher
+     */
+    private function calculatePerformanceScore($teacher)
+    {
+        $totalDays = 30; // Last 30 days
+        $izinDays = $teacher->izin_keluar_count ?: 0;
+        $lateDays = $teacher->keterlambatan_count ?: 0;
+        $pelanggaranCount = $teacher->pelanggaran_count ?: 0;
+        
+        // Calculate score (higher is better)
+        $score = 100;
+        $score -= ($izinDays / $totalDays) * 20; // 20 points per absence day
+        $score -= ($lateDays / $totalDays) * 10; // 10 points per late day
+        $score -= ($pelanggaranCount / $totalDays) * 5; // 5 points per violation
+        
+        return max(0, round($score));
+    }
+    
+    /**
+     * Get category distribution for charts
+     */
+    private function getCategoryDistribution()
+    {
+        // Get pelanggaran data by category
+        $pelanggaranByCategory = Pelanggaran::selectRaw('jenis_pelanggaran as category, COUNT(*) as count')
+            ->groupBy('jenis_pelanggaran')
+            ->orderByRaw('COUNT(*) DESC')
+            ->get();
+        
+        $categories = [];
+        $data = [];
+        
+        foreach ($pelanggaranByCategory as $pelanggaran) {
+            $categories[] = $pelanggaran->category;
+            $data[] = $pelanggaran->count;
+        }
+        
+        return [
+            'labels' => $categories,
+            'data' => $data
+        ];
+    }
+    
+    /**
+     * Get role-based data and permissions
+     */
+    
+    /**
      * Get role-based data and permissions
      */
     private function getRoleBasedData($role)
@@ -158,7 +318,7 @@ class DashboardController extends Controller
             $actions[] = [
                 'title' => 'Jadwal Piket',
                 'icon' => 'fas fa-calendar-check',
-                'route' => 'piket.index',
+                'route' => 'jadwal-piket.index',
                 'description' => 'Lihat jadwal piket',
                 'color' => 'info'
             ];

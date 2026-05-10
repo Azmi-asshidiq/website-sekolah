@@ -36,8 +36,17 @@ class AuthenticatedSessionController extends Controller
             'intended_url' => session()->get('url.intended')
         ]);
 
-        // Always redirect to dashboard after successful login
-        return redirect()->route('dashboard');
+        // Redirect to appropriate dashboard based on user role
+        $userRole = auth()->user()->role;
+        
+        switch ($userRole) {
+            case 'kepsek':
+                return redirect()->route('kepsek.dashboard');
+            case 'admin':
+            case 'guru':
+            default:
+                return redirect()->route('dashboard');
+        }
     }
 
     /**

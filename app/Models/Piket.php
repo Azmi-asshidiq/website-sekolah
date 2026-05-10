@@ -15,11 +15,19 @@ class Piket extends Model
     
     protected $fillable = [
         'id_guru',
-        'tanggal'
+        'tanggal',
+        'jam_mulai',
+        'jam_selesai',
+        'semester',
+        'tahun_ajaran',
+        'is_active'
     ];
 
     protected $casts = [
-        'tanggal' => 'date'
+        'tanggal' => 'date',
+        'jam_mulai' => 'datetime',
+        'jam_selesai' => 'datetime',
+        'is_active' => 'boolean'
     ];
 
     public function guru()

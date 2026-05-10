@@ -1,6 +1,4 @@
-@extends('layouts.app')
-
-@section('content')
+<?php $__env->startSection('content'); ?>
 <div class="container-fluid">
     <!-- User Info Card -->
     <div class="card mb-4" style="background: linear-gradient(135deg, #6366f1, #8b5cf6); color: white; border: none;"
@@ -9,23 +7,25 @@
                 <div>
                     <h5 class="mb-1">
                         <i class="fas fa-user-circle me-2"></i>
-                        {{ auth()->user()->name }}
+                        <?php echo e(auth()->user()->name); ?>
+
                     </h5>
                     <p class="mb-0 opacity-75">
                         <i class="fas fa-briefcase me-1"></i>
-                        @if(auth()->user()->role === 'admin')
+                        <?php if(auth()->user()->role === 'admin'): ?>
                             Administrator
-                        @elseif(auth()->user()->role === 'kepsek')
+                        <?php elseif(auth()->user()->role === 'kepsek'): ?>
                             Kepala Sekolah
-                        @else
+                        <?php else: ?>
                             Guru Piket
-                        @endif
+                        <?php endif; ?>
                     </p>
                 </div>
                 <div class="text-end">
                     <small class="opacity-75">Login Sebagai</small>
                     <div class="badge bg-white text-dark">
-                        {{ strtoupper(auth()->user()->role) }}
+                        <?php echo e(strtoupper(auth()->user()->role)); ?>
+
                     </div>
                 </div>
             </div>
@@ -36,19 +36,20 @@
         <h2>
             <i class="fas fa-calendar-alt me-2"></i>Jadwal Piket Guru
         </h2>
-        @if(auth()->user()->role === 'admin' || auth()->user()->role === 'kepsek')
-        <a href="{{ route('jadwal-piket.create') }}" class="btn btn-primary">
+        <?php if(auth()->user()->role === 'admin'): ?>
+        <a href="<?php echo e(route('jadwal-piket.create')); ?>" class="btn btn-primary">
             <i class="fas fa-plus me-2"></i>Tambah Jadwal
         </a>
-        @endif
+        <?php endif; ?>
     </div>
 
     <div class="card">
         <div class="card-body">
-            @forelse($jadwalPiket as $guruId => $jadwalList)
+            <?php $__empty_1 = true; $__currentLoopData = $jadwalPiket; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $guruId => $jadwalList): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
             <div class="mb-4">
                 <h5 class="text-primary mb-3">
-                    <i class="fas fa-chalkboard-teacher me-2"></i>{{ $jadwalList->first()->guru->nama }}
+                    <i class="fas fa-chalkboard-teacher me-2"></i><?php echo e($jadwalList->first()->guru->nama); ?>
+
                 </h5>
                 <div class="table-responsive">
                     <table class="table table-sm">
@@ -64,57 +65,59 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach($jadwalList as $jadwal)
+                            <?php $__currentLoopData = $jadwalList; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $jadwal): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                             <tr>
-                                <td>{{ $jadwal->hari_indo }}</td>
-                                <td>{{ $jadwal->jam_mulai ? $jadwal->jam_mulai->format('H:i') : '-' }}</td>
-                                <td>{{ $jadwal->jam_selesai ? $jadwal->jam_selesai->format('H:i') : '-' }}</td>
-                                <td>{{ $jadwal->semester }}</td>
-                                <td>{{ $jadwal->tahun_ajaran }}</td>
+                                <td><?php echo e($jadwal->hari_indo); ?></td>
+                                <td><?php echo e($jadwal->jam_mulai ? $jadwal->jam_mulai->format('H:i') : '-'); ?></td>
+                                <td><?php echo e($jadwal->jam_selesai ? $jadwal->jam_selesai->format('H:i') : '-'); ?></td>
+                                <td><?php echo e($jadwal->semester); ?></td>
+                                <td><?php echo e($jadwal->tahun_ajaran); ?></td>
                                 <td>
-                                    @if($jadwal->is_active)
+                                    <?php if($jadwal->is_active): ?>
                                         <span class="badge bg-success">Aktif</span>
-                                    @else
+                                    <?php else: ?>
                                         <span class="badge bg-secondary">Non-aktif</span>
-                                    @endif
+                                    <?php endif; ?>
                                 </td>
                                 <td>
                                     <div class="btn-group btn-group-sm">
-                                        <a href="{{ route('jadwal-piket.show', $jadwal) }}" class="btn btn-info">
+                                        <a href="<?php echo e(route('jadwal-piket.show', $jadwal)); ?>" class="btn btn-info">
                                             <i class="fas fa-eye"></i>
                                         </a>
-                                        @if(auth()->user()->role === 'admin' || auth()->user()->role === 'kepsek')
-                                        <a href="{{ route('jadwal-piket.edit', $jadwal) }}" class="btn btn-warning">
+                                        <?php if(auth()->user()->role === 'admin'): ?>
+                                        <a href="<?php echo e(route('jadwal-piket.edit', $jadwal)); ?>" class="btn btn-warning">
                                             <i class="fas fa-edit"></i>
                                         </a>
-                                        <form action="{{ route('jadwal-piket.destroy', $jadwal) }}" method="POST" class="d-inline">
-                                            @csrf
-                                            @method('DELETE')
+                                        <form action="<?php echo e(route('jadwal-piket.destroy', $jadwal)); ?>" method="POST" class="d-inline">
+                                            <?php echo csrf_field(); ?>
+                                            <?php echo method_field('DELETE'); ?>
                                             <button type="submit" class="btn btn-danger" onclick="return confirm('Hapus jadwal ini?')">
                                                 <i class="fas fa-trash"></i>
                                             </button>
                                         </form>
-                                        @endif
+                                        <?php endif; ?>
                                     </div>
                                 </td>
                             </tr>
-                            @endforeach
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                         </tbody>
                     </table>
                 </div>
             </div>
-            @empty
+            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
             <div class="text-center py-4">
                 <i class="fas fa-calendar-times fa-3x text-muted mb-3"></i>
                 <p class="text-muted">Belum ada jadwal piket</p>
-                @if(auth()->user()->role === 'admin')
-                <a href="{{ route('jadwal-piket.create') }}" class="btn btn-primary">
+                <?php if(auth()->user()->role === 'admin'): ?>
+                <a href="<?php echo e(route('jadwal-piket.create')); ?>" class="btn btn-primary">
                     <i class="fas fa-plus me-2"></i>Tambah Jadwal Pertama
                 </a>
-                @endif
+                <?php endif; ?>
             </div>
-            @endforelse
+            <?php endif; ?>
         </div>
     </div>
 </div>
-@endsection
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH C:\laragon\www\website-sekolah\resources\views/jadwal-piket/index.blade.php ENDPATH**/ ?>
